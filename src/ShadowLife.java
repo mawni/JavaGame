@@ -1,4 +1,7 @@
 import bagel.*;
+import bagel.util.Colour;
+import bagel.util.Point;
+
 import java.io.FileReader;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -6,24 +9,23 @@ import java.io.IOException;
 
 import java.util.Random;
 
-/**
- * An example Bagel game.
- *
- * @author Eleanor McMurtry
- */
 public class ShadowLife extends AbstractGame {
     private Image gatherer;
     private Image background;
     private Image tree;
     private double x = 100;
     private double y = 100;
+    final int TILESIZE = 64; //the window tiles are 64x64
 
     private static Integer treePos[][] = new Integer[4][2];
     private static Integer gathPos[][] = new Integer [2][2];
         //arrays which will have the (x,y) coords from each actor from the worlds.csv
 
+    //16x12 is the amount of 64 by 64 tiles
+
     public ShadowLife() {
         super(1024, 768, "Game Session");
+            //the width and height of the background image
         background = new Image("res/images/background.png");
         gatherer = new Image("res/images/gatherer.png");
         tree = new Image("res/images/tree.png");
@@ -63,6 +65,21 @@ public class ShadowLife extends AbstractGame {
         game.run();
     }
 
+    public void drawTileGrid(){
+        int i=0,j=0;
+        while (i<=background.getWidth()){
+            //print vertical gridlines
+            Drawing.drawLine( new Point(i,j), new Point(i, background.getHeight()), 1.0, Colour.BLUE);
+            i+=TILESIZE;
+        }
+        i=0;
+        while (j<=background.getHeight()){
+            //print horizontal gridlines
+            Drawing.drawLine(new Point(i, j), new Point(background.getWidth(), j), 1.0, Colour.BLUE);
+            j+=TILESIZE;
+        }
+    }
+
     /**
      * Performs a state update. This simple example shows an image that can be controlled with the arrow keys, and
      * allows the game to exit when the escape key is pressed.
@@ -96,10 +113,11 @@ public class ShadowLife extends AbstractGame {
             //gatherer isn't supposed to move like this, so at this stage it's placeholder.
             //currently program is still the old bagel test skeleton w/ the arroy input moving gatherer
         for (int i=0; i< treePos.length; i++){
-            tree.draw(treePos[i][0],treePos[i][1]);
+            tree.drawFromTopLeft(treePos[i][0],treePos[i][1]);
         }
         for (int i=0; i< gathPos.length; i++){
-            gatherer.draw(gathPos[i][0],gathPos[i][1]);
+            gatherer.drawFromTopLeft(gathPos[i][0],gathPos[i][1]);
         }
+        drawTileGrid();
     }
 }
