@@ -3,9 +3,10 @@ import bagel.util.Colour;
 import bagel.util.Point;
 
 import java.io.FileReader;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.ArrayList;
 
 import java.util.Random;
 
@@ -15,12 +16,15 @@ public class ShadowLife extends AbstractGame {
     private Image tree;
     private double x = 100;
     private double y = 100;
-    final int TILESIZE = 64; //the window tiles are 64x64
+    static final int TILESIZE = 64; //the window tiles are 64x64
 
+    /*
+    private static Integer treePos[][] = new Integer[4][2];
+    ArrayList<Integer[]> treePosList = new ArrayList<Integer[]>(Arrays.asList(treePos[]));
+    */
     private static Integer treePos[][] = new Integer[4][2];
     private static Integer gathPos[][] = new Integer [2][2];
         //arrays which will have the (x,y) coords from each actor from the worlds.csv
-
     //16x12 is the amount of 64 by 64 tiles
 
     public ShadowLife() {
@@ -57,7 +61,8 @@ public class ShadowLife extends AbstractGame {
             //System.out.println("testing scan. 1st tree (x,y) = (" + treePos[0][0] + "," + treePos[0][1] + ")");
             //System.out.println(Arrays.deepToString(treePos));
             //System.out.println(Arrays.deepToString(gathPos));
-        } catch (Exception e){
+        } catch (IOException e){
+            //Not sure what IOException does differently to just Exception, but seems both work
             e.printStackTrace();
         }
 
@@ -65,6 +70,7 @@ public class ShadowLife extends AbstractGame {
         game.run();
     }
 
+    //draw out a visual tile grid. each tile is 64x64
     public void drawTileGrid(){
         int i=0,j=0;
         while (i<=background.getWidth()){
