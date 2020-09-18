@@ -5,25 +5,27 @@ import bagel.util.Point;
 import java.io.FileReader;
 import java.util.Scanner;
 import java.io.IOException;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.ArrayList;
-
+import java.lang.*;
 import java.util.Random;
 
 public class ShadowLife extends AbstractGame {
-    private Image gathererOld; //i should delete this later, it's from bagelTest
+    //private Image gathererOld; //remnants from wk5 - workshop 4
+    //private double x = 100;
+    //private double y = 100;
     private Image background;
-    private double x = 100;
-    private double y = 100;
     static final int TILESIZE = 64; //the window tiles are 64x64
+    private static long currTime;
+    private int ticks = 5;
 
-    //actor arrays
+    //actor arrays. dynamic array lists
     private ArrayList<Gatherer> arrGatherers = new ArrayList<Gatherer>();
     private ArrayList<Tree> arrTrees = new ArrayList<Tree>();
 
     /*
       TO-DO:
-      - the weird milisecond, change sim only once every 500ms.
+      - the weird millisecond, change sim only once every 500ms.
             - renders happen 60fps, but actual sim changes only every 500ms
       - add the gatherer functionality to move directions
     */
@@ -34,22 +36,23 @@ public class ShadowLife extends AbstractGame {
             //i would add static constants and a method to calculate background width and height...
             //...but the values are used once, and the super(); line has to be first in the constructor
         background = new Image("res/images/background.png");
-        gathererOld = new Image("res/images/gatherer.png");
-        //tree = new Image("res/images/tree.png");
+        //gathererOld = new Image("res/images/gatherer.png");
+        currTime = System.currentTimeMillis();
+        //System.out.println(currTime);
     }
 
     //Main method, program entry point
     public static void main(String[] args) {
         ShadowLife game = new ShadowLife();
         String[] fileLine = new String[3]; //each row of 3 arguments (in test.csv) stored in fileLine[]
-        Point tempPt;
+        CustomPoint tempPt;
 
         //get actor information from worlds test.csv file
         try (Scanner file = new Scanner(new FileReader("res/worlds/test.csv"))){
             while (file.hasNextLine()){
                 fileLine = file.nextLine().split(","); //split based on commas ","
                 //System.out.println(Arrays.toString(fileLine));
-                tempPt = new Point(Double.parseDouble(fileLine[1]), Double.parseDouble(fileLine[2]));
+                tempPt = new CustomPoint(Double.parseDouble(fileLine[1]), Double.parseDouble(fileLine[2]));
 
                 if (fileLine[0].equals("Tree")){
                     game.makeTree(tempPt);
@@ -62,16 +65,14 @@ public class ShadowLife extends AbstractGame {
             //Not sure what IOException does differently to just Exception, but seems both work
             e.printStackTrace();
         }
-
         game.run();
     }
 
     //methods to add trees and gatherers to the relevant arrays
-    //arrTrees and arrGatherers are both dynamic array lists, and class attributes for ShadowLife
-    public void makeTree(Point point){
+    public void makeTree(CustomPoint point){
         this.arrTrees.add(new Tree(point));
     }
-    public void makeGatherer(Point point){
+    public void makeGatherer(CustomPoint point){
         this.arrGatherers.add(new Gatherer(point));
     }
 
@@ -92,16 +93,28 @@ public class ShadowLife extends AbstractGame {
         }
     }
 
-    /**
-     * Performs a state update. This simple example shows an image that can be controlled with the arrow keys, and
-     * allows the game to exit when the escape key is pressed.
-     */
+    //given a direction, move an actor to (left,right,up,down) = (1,2,3,4)
+    public CustomPoint moveGath(CustomPoint point, int direction){
+        //CustomPoint tempPt = point;
+        if (direction == 1){ //left
+            point.setX(point.getX() - TILESIZE);
+        } else if (direction == 2){ //right
+            point.setX(point.getX() + TILESIZE);
+        } else if (direction == 3){ //up
+            point.setY(point.getY() - TILESIZE);
+        } else { //direction==4 //down
+            point.setY(point.getY() + TILESIZE);
+        }
+        return point;
+    }
+
+    /** Performs a state update. */
     @Override
     public void update(Input input) {
-        //this is executed 60 times per second
-        //state of simulation changed here
+        /*
+        //This commented part is vestigial skeleton code from wk5 workshop 4. Kept in case for project 2 ;)
+        //oldGatherer can be controlled with arrow keys
         double speed = 0.5;
-        //System.out.println("height = " + background.getHeight() + ", width = " + background.getWidth());
         if (input.isDown(Keys.LEFT)) {
             x -= speed;
         }
@@ -113,25 +126,46 @@ public class ShadowLife extends AbstractGame {
         }
         if (input.isDown(Keys.DOWN)) {
             y += speed;
-        }
-
+        }*/
         if (input.wasPressed(Keys.ESCAPE)) {
             Window.close();
-        }
-
+        } //game exits when ESCAPE pressed
 
         background.draw(Window.getWidth() / 2.0, Window.getHeight() / 2.0);
-        gathererOld.draw(x, y);
-            //gatherer isn't supposed to move like this, so at this stage it's placeholder.
-            //currently program is still the old bagel test skeleton w/ the array input moving gatherer
-
-        //draw all trees and gatherers with their own class methods
-        for (Tree tree : arrTrees){
+        //gathererOld.draw(x, y);
+        for (Tree tree : arrTrees){  //draw all trees
             tree.drawTree();
             //System.out.println(tree.getPoint());
         }
-        for (Gatherer gatherer : arrGatherers){
-            gatherer.drawGath();
+
+        int newDirection;
+        //the contents of this if() happen every 500ms tick. simulation happens within
+        if ((System.currentTimeMillis()-currTime) >= 500.0){
+            if (ticks>=5){
+                //set new direction for each gatherer every 5 ticks
+                for (Gatherer gatherer : arrGatherers){
+                    gatherer.setDirection((int) Math.floor(Math.random()*4)+1); //random num 1,2,3 or 4
+                    System.out.println("gatherer #" + arrGatherers.indexOf(gatherer) + "moves direction " + gatherer.getDirection());
+                }
+                ticks=0;
+                    //reset the counting.
+            }
+
+            for (Gatherer gatherer : arrGatherers){
+                gatherer.setPoint(moveGath(gatherer.getPoint(), gatherer.getDirection()));
+                gatherer.drawGath();
+                //get current gatherer point, get direction -> use moveGath() to pick direction
+                // -> set new gatherer point -> draw gatherer according to that new point
+            }
+            //System.out.print(System.currentTimeMillis());
+            currTime = System.currentTimeMillis();
+                //currTime is always tracking the time of the last tick
+            ticks++;
+        } else {
+            //render all gatherers are normal for the frame, no movement
+            for (Gatherer gatherer : arrGatherers){
+                gatherer.drawGath();
+            }
         }
 
         drawTileGrid();
