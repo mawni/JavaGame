@@ -11,67 +11,73 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class ShadowLife extends AbstractGame {
-    private Image gatherer;
+    private Image gathererOld; //i should delete this later, it's from bagelTest
     private Image background;
-    private Image tree;
     private double x = 100;
     private double y = 100;
     static final int TILESIZE = 64; //the window tiles are 64x64
 
+    //actor arrays
+    private ArrayList<Gatherer> arrGatherers = new ArrayList<Gatherer>();
+    private ArrayList<Tree> arrTrees = new ArrayList<Tree>();
+
     /*
-    private static Integer treePos[][] = new Integer[4][2];
-    ArrayList<Integer[]> treePosList = new ArrayList<Integer[]>(Arrays.asList(treePos[]));
+      TO-DO:
+      - the weird milisecond, change sim only once every 500ms.
+            - renders happen 60fps, but actual sim changes only every 500ms
+      - add the gatherer functionality to move directions
     */
-    private static Integer treePos[][] = new Integer[4][2];
-    private static Integer gathPos[][] = new Integer [2][2];
-        //arrays which will have the (x,y) coords from each actor from the worlds.csv
-    //16x12 is the amount of 64 by 64 tiles
 
     public ShadowLife() {
         super(1024, 768, "Game Session");
-            //the width and height of the background image
+            //the width and height of the background image.
+            //i would add static constants and a method to calculate background width and height...
+            //...but the values are used once, and the super(); line has to be first in the constructor
         background = new Image("res/images/background.png");
-        gatherer = new Image("res/images/gatherer.png");
-        tree = new Image("res/images/tree.png");
+        gathererOld = new Image("res/images/gatherer.png");
+        //tree = new Image("res/images/tree.png");
     }
 
-    /**
-     * The entry point for the program. the main method
-     */
+    //Main method, program entry point
     public static void main(String[] args) {
-        String[] fileLine = new String[3];
-        int treeCtr = 0, gathCtr = 0;
+        ShadowLife game = new ShadowLife();
+        String[] fileLine = new String[3]; //each row of 3 arguments (in test.csv) stored in fileLine[]
+        Point tempPt;
 
         //get actor information from worlds test.csv file
         try (Scanner file = new Scanner(new FileReader("res/worlds/test.csv"))){
             while (file.hasNextLine()){
                 fileLine = file.nextLine().split(","); //split based on commas ","
                 //System.out.println(Arrays.toString(fileLine));
+                tempPt = new Point(Double.parseDouble(fileLine[1]), Double.parseDouble(fileLine[2]));
 
                 if (fileLine[0].equals("Tree")){
-                    treePos[treeCtr][0] = Integer.parseInt(fileLine[1]); //x coordinate
-                    treePos[treeCtr][1] = Integer.parseInt(fileLine[2]); //y coordinate
-                    treeCtr++;
+                    game.makeTree(tempPt);
                 } else if (fileLine[0].equals("Gatherer")){
-                    gathPos[gathCtr][0] = Integer.parseInt(fileLine[1]); //x coordinate
-                    gathPos[gathCtr][1] = Integer.parseInt(fileLine[2]); //y coordinate
-                    gathCtr++;
+                    game.makeGatherer(tempPt);
                 }
             }
-            //System.out.println("testing scan. 1st tree (x,y) = (" + treePos[0][0] + "," + treePos[0][1] + ")");
-            //System.out.println(Arrays.deepToString(treePos));
-            //System.out.println(Arrays.deepToString(gathPos));
+            //System.out.println("testing scan. " + fileLine[0] + " (x,y) = (" + fileLine[1] + "," + fileLine[2] + ")");
         } catch (IOException e){
             //Not sure what IOException does differently to just Exception, but seems both work
             e.printStackTrace();
         }
 
-        ShadowLife game = new ShadowLife();
         game.run();
+    }
+
+    //methods to add trees and gatherers to the relevant arrays
+    //arrTrees and arrGatherers are both dynamic array lists, and class attributes for ShadowLife
+    public void makeTree(Point point){
+        this.arrTrees.add(new Tree(point));
+    }
+    public void makeGatherer(Point point){
+        this.arrGatherers.add(new Gatherer(point));
     }
 
     //draw out a visual tile grid. each tile is 64x64
     public void drawTileGrid(){
+        //16x12 is the amount of 64 by 64 tiles
         int i=0,j=0;
         while (i<=background.getWidth()){
             //print vertical gridlines
@@ -115,15 +121,19 @@ public class ShadowLife extends AbstractGame {
 
 
         background.draw(Window.getWidth() / 2.0, Window.getHeight() / 2.0);
-        gatherer.draw(x, y);
+        gathererOld.draw(x, y);
             //gatherer isn't supposed to move like this, so at this stage it's placeholder.
-            //currently program is still the old bagel test skeleton w/ the arroy input moving gatherer
-        for (int i=0; i< treePos.length; i++){
-            tree.drawFromTopLeft(treePos[i][0],treePos[i][1]);
+            //currently program is still the old bagel test skeleton w/ the array input moving gatherer
+
+        //draw all trees and gatherers with their own class methods
+        for (Tree tree : arrTrees){
+            tree.drawTree();
+            //System.out.println(tree.getPoint());
         }
-        for (int i=0; i< gathPos.length; i++){
-            gatherer.drawFromTopLeft(gathPos[i][0],gathPos[i][1]);
+        for (Gatherer gatherer : arrGatherers){
+            gatherer.drawGath();
         }
+
         drawTileGrid();
     }
 }
