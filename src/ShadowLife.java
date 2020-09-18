@@ -25,16 +25,14 @@ public class ShadowLife extends AbstractGame {
 
     /*
       TO-DO:
-      - the weird millisecond, change sim only once every 500ms.
-            - renders happen 60fps, but actual sim changes only every 500ms
-      - add the gatherer functionality to move directions
+        ~~fin~~
     */
 
     public ShadowLife() {
         super(1024, 768, "Game Session");
             //the width and height of the background image.
             //i would add static constants and a method to calculate background width and height...
-            //...but the values are used once, and the super(); line has to be first in the constructor
+            //...but the values are used once, and the super() line has to be first in the constructor
         background = new Image("res/images/background.png");
         //gathererOld = new Image("res/images/gatherer.png");
         currTime = System.currentTimeMillis();
@@ -47,7 +45,7 @@ public class ShadowLife extends AbstractGame {
         String[] fileLine = new String[3]; //each row of 3 arguments (in test.csv) stored in fileLine[]
         CustomPoint tempPt;
 
-        //get actor information from worlds test.csv file
+        //get actor information from worlds test.csv file. i've tested other files, looks good
         try (Scanner file = new Scanner(new FileReader("res/worlds/test.csv"))){
             while (file.hasNextLine()){
                 fileLine = file.nextLine().split(","); //split based on commas ","
@@ -77,6 +75,7 @@ public class ShadowLife extends AbstractGame {
     }
 
     //draw out a visual tile grid. each tile is 64x64
+    //this is added in for my own sanity, i know it's not necessary
     public void drawTileGrid(){
         //16x12 is the amount of 64 by 64 tiles
         int i=0,j=0;
@@ -93,7 +92,8 @@ public class ShadowLife extends AbstractGame {
         }
     }
 
-    //given a direction, move an actor to (left,right,up,down) = (1,2,3,4)
+    //given a direction and point, move the point by one tile accordingly. (left,right,up,down) = (1,2,3,4)
+    //used to move actors
     public CustomPoint moveGath(CustomPoint point, int direction){
         //CustomPoint tempPt = point;
         if (direction == 1){ //left
@@ -138,19 +138,19 @@ public class ShadowLife extends AbstractGame {
             //System.out.println(tree.getPoint());
         }
 
-        int newDirection;
         //the contents of this if() happen every 500ms tick. simulation happens within
         if ((System.currentTimeMillis()-currTime) >= 500.0){
             if (ticks>=5){
                 //set new direction for each gatherer every 5 ticks
                 for (Gatherer gatherer : arrGatherers){
                     gatherer.setDirection((int) Math.floor(Math.random()*4)+1); //random num 1,2,3 or 4
-                    System.out.println("gatherer #" + arrGatherers.indexOf(gatherer) + "moves direction " + gatherer.getDirection());
+                    //System.out.println("gatherer #" + arrGatherers.indexOf(gatherer) + "moves direction " + gatherer.getDirection());
                 }
                 ticks=0;
                     //reset the counting.
             }
 
+            //move gatherers according to their current direction
             for (Gatherer gatherer : arrGatherers){
                 gatherer.setPoint(moveGath(gatherer.getPoint(), gatherer.getDirection()));
                 gatherer.drawGath();
