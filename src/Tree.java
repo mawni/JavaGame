@@ -1,3 +1,7 @@
+/*
+project 1 sample solution used as base
+*/
+
 public class Tree extends Actor {
     public static final String TYPE = "Tree";
 
@@ -7,4 +11,5 @@ public class Tree extends Actor {
 
     @Override
     public void update() {}
+    //implemented with zero logic
 }

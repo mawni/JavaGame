@@ -1,5 +1,9 @@
 import bagel.Image;
 
+/*
+project 1 sample solution used as base
+*/
+
 public abstract class Actor {
     private int x;
     private int y;
@@ -17,6 +21,7 @@ public abstract class Actor {
     public final void tick() {
         update();
     }
+    //all actors run tick() with each tick. Update() run within
 
     public void render() {
         image.drawFromTopLeft(x, y);
@@ -28,4 +33,5 @@ public abstract class Actor {
     }
 
     public abstract void update();
+    //abstract, so all subclasses must implement update(), even if empty logic
 }

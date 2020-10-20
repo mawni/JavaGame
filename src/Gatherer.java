@@ -1,3 +1,8 @@
+
+/*
+project 1 sample solution used as base
+*/
+
 public class Gatherer extends Actor {
     public static final String TYPE = "Gatherer";
     private int direction;
@@ -12,13 +17,17 @@ public class Gatherer extends Actor {
 
     @Override
     public void update() {
+        //update runs each tick.
         if (++tickCounter == RESET_FREQUENCY) {
+            //if currently tick 5, change direction then reset tickCounter to 0
             direction = Direction.getRandom();
             tickCounter = 0;
         }
-
+        System.out.println(tickCounter);
+        //each tick, move based on current direction
         switch (direction) {
             case Direction.UP:
+                //Direction.UP = a constant. Value = 0
                 move(0, -ShadowLife.TILE_SIZE);
                 break;
             case Direction.DOWN:
