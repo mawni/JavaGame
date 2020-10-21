@@ -68,8 +68,25 @@ public class ShadowLife extends AbstractGame {
                         //if type = "Gatherer"
                         actors[count++] = new Gatherer(x, y);
                         break;
+                    case Visual.TYPE_F: //"Fence"
+                        actors[count++] = new Visual(Visual.TYPE_F, type.toLowerCase(), x, y);
+                        //"Fence" becomes "fence"
+                        break;
+                    case Visual.TYPE_G: //"GoldTree"
+                        actors[count++] = new Visual(Visual.TYPE_G, "gold-tree", x, y);
+                        //one-off hardcode of file path. i think it's appropriate
+                        break;
+                    case Visual.TYPE_P: //"Pool"
+                        actors[count++] = new Visual(Visual.TYPE_P, type.toLowerCase(), x, y);
+                        //"Pool" becomes "pool"
+                        break;
+                    case Visual.TYPE_D: //"Pad"
+                        actors[count++] = new Visual(Visual.TYPE_D, type.toLowerCase(), x, y);
+                        //"Pad" becomes "pad"
+                        break;
                 }
                 if (type.contains(Sign.TYPE)){
+                    //if args[0] contains "Sign"
                     type = type.replace(Sign.TYPE, "").toLowerCase();
                     //this should make "SignLeft" into "left" for example
                     actors[count++] = new Sign(type, x, y);

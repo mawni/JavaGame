@@ -3,6 +3,7 @@ import bagel.Image;
 public class Sign extends Actor {
     public static final String TYPE = "Sign";
     private final int direction;
+    //Sign was given its own class due to there being 4 diff directions
 
     public Sign(String path, int x, int y){
         //path is one of: "up" "down" "left" "right"
