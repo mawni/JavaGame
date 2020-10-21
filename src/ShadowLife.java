@@ -68,6 +68,10 @@ public class ShadowLife extends AbstractGame {
                         //if type = "Gatherer"
                         actors[count++] = new Gatherer(x, y);
                         break;
+                    case Thief.TYPE:
+                        //if type = "Thief"
+                        actors[count++] = new Thief(x, y);
+                        break;
                     case Visual.TYPE_F: //"Fence"
                         actors[count++] = new Visual(Visual.TYPE_F, type.toLowerCase(), x, y);
                         //"Fence" becomes "fence"
@@ -83,6 +87,14 @@ public class ShadowLife extends AbstractGame {
                     case Visual.TYPE_D: //"Pad"
                         actors[count++] = new Visual(Visual.TYPE_D, type.toLowerCase(), x, y);
                         //"Pad" becomes "pad"
+                        break;
+                    case HoardStock.TYPE_H: //"Hoard"
+                        actors[count++] = new Visual(HoardStock.TYPE_H, type.toLowerCase(), x, y);
+                        //"Hoard" becomes "hoard"
+                        break;
+                    case HoardStock.TYPE_S: //"Stockpile"
+                        actors[count++] = new Visual(HoardStock.TYPE_S, "cherries", x, y);
+                        //one-off hardcode of file path
                         break;
                 }
                 if (type.contains(Sign.TYPE)){

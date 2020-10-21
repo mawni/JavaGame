@@ -3,7 +3,7 @@ public class Visual extends Actor {
     //Has no extra methods or attributes aside from type stuff
 
     public static final String TYPE_F = "Fence";
-    public static final String TYPE_G = "GoldTree";
+    public static final String TYPE_G = "GoldenTree";
     public static final String TYPE_P = "Pool";
     public static final String TYPE_D = "Pad";
 
