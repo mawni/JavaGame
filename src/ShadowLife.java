@@ -1,6 +1,7 @@
 import bagel.AbstractGame;
 import bagel.Image;
 import bagel.Input;
+import org.lwjgl.system.CallbackI;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -25,6 +26,7 @@ public class ShadowLife extends AbstractGame {
     private static long tick_time;
         //tick rate AKA time in milliseconds between each tick.
         //is static rather than final. Can't have both because it's initialised with cmd args[] and hence in main()
+    private static long tickCtr = 0;
 
     private static final int MAX_ACTORS = 100;
     private Actor[] actors;
@@ -117,9 +119,16 @@ public class ShadowLife extends AbstractGame {
 
     @Override
     protected void update(Input input) {
+        if (tickCtr>max_ticks){
+            //if more than max ticks pass, exit
+            System.out.println("Timed out");
+            System.exit(-1);
+        }
+
         // If enough time has passed, run the next tick
         if (System.currentTimeMillis() - lastTick > tick_time) {
             lastTick = System.currentTimeMillis();
+            tickCtr++;
             for (Actor actor : actors) {
                 if (actor != null) {
                     actor.tick();
@@ -137,11 +146,30 @@ public class ShadowLife extends AbstractGame {
         }
     }
 
+    public static void abandonShip(){
+        System.out.println("usage: ShadowLife <tick rate> <max ticks> <world file>");
+        System.exit(-1);
+    }
+
     //main method is entry pt. ShadowLife object made then run. Is by nature continually updated with update()
     public static void main(String[] args) {
+        if (args.length != 3){
+            //if more or fewer than 3 arguments provided
+            abandonShip();
+        }
         ShadowLife game = new ShadowLife(args[2]);
-        game.setTick_time(Long.parseLong(args[0]));
-        game.setMax_ticks(Long.parseLong(args[1]));
+        //haven't been asked to error check this so i didn't. obviously could be easily implemented with try..catch
+        try{
+            game.setTick_time(Long.parseLong(args[0]));
+            game.setMax_ticks(Long.parseLong(args[1]));
+        }catch(NumberFormatException e){
+            //not valid
+            abandonShip();
+        }
+        if (tick_time<0 || max_ticks<0){
+            abandonShip();
+        }
+
         game.run();
             //update() happens within
     }

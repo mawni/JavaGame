@@ -20,7 +20,6 @@ public class Thief extends Actor {
 
             tickCounter = 0;
         }
-        System.out.println(tickCounter);
         //each tick, move based on current direction
         switch (direction) {
             case Direction.UP:
