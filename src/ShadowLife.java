@@ -11,6 +11,12 @@ import java.nio.file.Path;
 /*
 project 1 sample solution used as base
 */
+
+/*
+* TO DO
+* - i think sign is finished implementing. should test it with the file
+* */
+
 public class ShadowLife extends AbstractGame {
     public static final int TILE_SIZE = 64;
 
@@ -39,7 +45,7 @@ public class ShadowLife extends AbstractGame {
         int count = 0; //counter for adding actors to Actor[] array
 
 
-        try (BufferedReader reader = new BufferedReader(new FileReader("res/worlds/test.csv"))) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(worldFile))) {
             int size = (int) Files.lines(Path.of(worldFile)).count();
             actors = new Actor[size];
                 //generate Actor array of size size based on num of lines in file
@@ -62,6 +68,11 @@ public class ShadowLife extends AbstractGame {
                         //if type = "Gatherer"
                         actors[count++] = new Gatherer(x, y);
                         break;
+                }
+                if (type.contains(Sign.TYPE)){
+                    type = type.replace(Sign.TYPE, "").toLowerCase();
+                    //this should make "SignLeft" into "left" for example
+                    actors[count++] = new Sign(type, x, y);
                 }
             }
         } catch (IOException e) {

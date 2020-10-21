@@ -1,16 +1,11 @@
-
-/*
-project 1 sample solution used as base
-*/
-
-public class Gatherer extends Actor {
-    public static final String TYPE = "Gatherer";
+public class Thief extends Actor {
+    public static final String TYPE = "Thief";
     private int direction;
     private int tickCounter = -1;
     private static final int RESET_FREQUENCY = 5;
 
-    public Gatherer(int x, int y) {
-        super("res/images/gatherer.png", TYPE, x, y);
+    public Thief(int x, int y) {
+        super("res/images/thief.png", TYPE, x, y);
         direction = Direction.getRandom();
     }
 
@@ -19,9 +14,13 @@ public class Gatherer extends Actor {
         //update runs each tick.
         if (++tickCounter == RESET_FREQUENCY) {
             //if currently tick 5, change direction then reset tickCounter to 0
+
             direction = Direction.getRandom();
+            //TEMPORARY!!!!!!!!!!!!!!!!! Need to properly implement direction logic
+
             tickCounter = 0;
         }
+        System.out.println(tickCounter);
         //each tick, move based on current direction
         switch (direction) {
             case Direction.UP:
