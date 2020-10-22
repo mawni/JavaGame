@@ -44,71 +44,95 @@ public class ShadowLife extends AbstractGame {
     }
 
     private void loadActors(String worldFile) {
-        //read through world files
+        //reads through world files
         //file path is input argument
+        int currentLine = 0;
         ArrayList<Actor> thieves = new ArrayList<Actor>();
             //used so that thieves are added to the end of the actors array list.
             //means that all thief ticks will only ever happen after all gatherer ticks done (and all other actors for that matter)s
 
         try (BufferedReader reader = new BufferedReader(new FileReader(worldFile))) {
             int size = (int) Files.lines(Path.of(worldFile)).count();
-
             String line;
             while ((line = reader.readLine()) != null) {
                 //while not an empty line
                 // Line format is: type,x,y
-                String[] parts = line.split(",");
-                String type = parts[0];
-                int x = Integer.parseInt(parts[1]);
-                int y = Integer.parseInt(parts[2]);
+                String type;
+                int x,y;
+                try {
+                    int readSuccess = 0; //used for seeing if the item type is recognised
+                    String[] parts = line.split(",");
+                    type = parts[0];
+                    x = Integer.parseInt(parts[1]);
+                    y = Integer.parseInt(parts[2]);
+                    switch (type) {
+                        case Tree.TYPE:
+                            //if type = "Tree"
+                            actors.add(new Tree(x, y));
+                            readSuccess = 1;
+                            break;
+                        case Gatherer.TYPE:
+                            //if type = "Gatherer"
+                            actors.add(new Gatherer(x, y));
+                            readSuccess = 1;
+                            break;
+                        case Thief.TYPE:
+                            //if type = "Thief"
+                            thieves.add(new Thief(x, y));
+                            readSuccess = 1;
+                            break;
+                        case Visual.TYPE_F: //"Fence"
+                            actors.add(new Visual(Visual.TYPE_F, type.toLowerCase(), x, y));
+                            readSuccess = 1;
+                            //"Fence" becomes "fence"
+                            break;
+                        case Visual.TYPE_G: //"GoldTree"
+                            actors.add(new Visual(Visual.TYPE_G, "gold-tree", x, y));
+                            //one-off hardcode of file path. i think it's appropriate
+                            readSuccess = 1;
+                            break;
+                        case Visual.TYPE_P: //"Pool"
+                            actors.add(new Visual(Visual.TYPE_P, type.toLowerCase(), x, y));
+                            //"Pool" becomes "pool"
+                            readSuccess = 1;
+                            break;
+                        case Visual.TYPE_D: //"Pad"
+                            actors.add(new Visual(Visual.TYPE_D, type.toLowerCase(), x, y));
+                            //"Pad" becomes "pad"
+                            readSuccess = 1;
+                            break;
+                        case HoardStock.TYPE_H: //"Hoard"
+                            actors.add(new HoardStock(HoardStock.TYPE_H, type.toLowerCase(), x, y));
+                            //"Hoard" becomes "hoard"
+                            readSuccess = 1;
+                            break;
+                        case HoardStock.TYPE_S: //"Stockpile"
+                            actors.add(new HoardStock(HoardStock.TYPE_S, "cherries", x, y));
+                            //System.out.println("stockpile generated @ (x,y) = " + "(" + x + "," + y + ")");
+                            //one-off hardcode of file path
+                            readSuccess = 1;
+                            break;
+                    }
+                    if (type.contains(Sign.TYPE)){
+                        //if args[0] contains "Sign"
+                        actors.add(new Sign(type, x, y));
+                        readSuccess = 1;
+                    }
+                    if (readSuccess==0){
+                        System.out.println("error: in file \"" + worldFile + "\" at line " + currentLine);
+                        System.exit(-1);
+                    }
+                    currentLine++;
+                } catch (Exception e){
+                    System.out.println("error: in file \"" + worldFile + "\" at line " + currentLine);
+                    System.exit(-1);
+                }
 
-                switch (type) {
-                    case Tree.TYPE:
-                        //if type = "Tree"
-                        actors.add(new Tree(x, y));
-                        break;
-                    case Gatherer.TYPE:
-                        //if type = "Gatherer"
-                        actors.add(new Gatherer(x, y));
-                        break;
-                    case Thief.TYPE:
-                        //if type = "Thief"
-                        thieves.add(new Thief(x, y));
-                        break;
-                    case Visual.TYPE_F: //"Fence"
-                        actors.add(new Visual(Visual.TYPE_F, type.toLowerCase(), x, y));
-                        //"Fence" becomes "fence"
-                        break;
-                    case Visual.TYPE_G: //"GoldTree"
-                        actors.add(new Visual(Visual.TYPE_G, "gold-tree", x, y));
-                        //one-off hardcode of file path. i think it's appropriate
-                        break;
-                    case Visual.TYPE_P: //"Pool"
-                        actors.add(new Visual(Visual.TYPE_P, type.toLowerCase(), x, y));
-                        //"Pool" becomes "pool"
-                        break;
-                    case Visual.TYPE_D: //"Pad"
-                        actors.add(new Visual(Visual.TYPE_D, type.toLowerCase(), x, y));
-                        //"Pad" becomes "pad"
-                        break;
-                    case HoardStock.TYPE_H: //"Hoard"
-                        actors.add(new HoardStock(HoardStock.TYPE_H, type.toLowerCase(), x, y));
-                        //"Hoard" becomes "hoard"
-                        break;
-                    case HoardStock.TYPE_S: //"Stockpile"
-                        actors.add(new HoardStock(HoardStock.TYPE_S, "cherries", x, y));
-                        //System.out.println("stockpile generated @ (x,y) = " + "(" + x + "," + y + ")");
-                        //one-off hardcode of file path
-                        break;
-                }
-                if (type.contains(Sign.TYPE)){
-                    //if args[0] contains "Sign"
-                    actors.add(new Sign(type, x, y));
-                }
             }
             actors.addAll(thieves); //append all thieves to the end of actors array list
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("error: file \"" + worldFile + "\" not found");
             System.exit(-1);
         }
         Actor.setArrActors(actors);
