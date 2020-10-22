@@ -9,9 +9,6 @@ public class Gatherer extends Actor {
     private boolean carrying;
     private boolean active;
 
-    //private int tickCounter = -1;
-    //private static final int RESET_FREQUENCY = 5;
-
     public Gatherer(int x, int y) {
         super("res/images/gatherer.png", TYPE, x, y);
         direction = Direction.LEFT;
@@ -22,12 +19,6 @@ public class Gatherer extends Actor {
     @Override
     public void update() {
         //update runs each tick.
-
-        /*if (++tickCounter == RESET_FREQUENCY) {
-            //if currently tick 5, change direction then reset tickCounter to 0
-            direction = Direction.getRandom();
-            tickCounter = 0;
-        }*/
 
         if (active == true){
             //each tick, if active, move 1 tile based on current direction
@@ -57,7 +48,8 @@ public class Gatherer extends Actor {
 
         //LINES 6-10
         if (atActor(Visual.TYPE_P)){
-            //if at pool then do a bunch of stuff
+            //if at mitosis pool
+            //####################################
         }
 
         if (atActor(Sign.TYPE_U)){
@@ -136,4 +128,5 @@ public class Gatherer extends Actor {
                 direction = Direction.LEFT;
         }
     }
+
 }

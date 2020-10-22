@@ -46,6 +46,9 @@ public class ShadowLife extends AbstractGame {
     private void loadActors(String worldFile) {
         //read through world files
         //file path is input argument
+        ArrayList<Actor> thieves = new ArrayList<Actor>();
+            //used so that thieves are added to the end of the actors array list.
+            //means that all thief ticks will only ever happen after all gatherer ticks done (and all other actors for that matter)s
 
         try (BufferedReader reader = new BufferedReader(new FileReader(worldFile))) {
             int size = (int) Files.lines(Path.of(worldFile)).count();
@@ -70,7 +73,7 @@ public class ShadowLife extends AbstractGame {
                         break;
                     case Thief.TYPE:
                         //if type = "Thief"
-                        actors.add(new Thief(x, y));
+                        thieves.add(new Thief(x, y));
                         break;
                     case Visual.TYPE_F: //"Fence"
                         actors.add(new Visual(Visual.TYPE_F, type.toLowerCase(), x, y));
@@ -103,6 +106,7 @@ public class ShadowLife extends AbstractGame {
                     actors.add(new Sign(type, x, y));
                 }
             }
+            actors.addAll(thieves); //append all thieves to the end of actors array list
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(-1);
