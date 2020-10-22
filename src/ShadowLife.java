@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 /*
 project 1 sample solution used as base
@@ -110,6 +111,8 @@ public class ShadowLife extends AbstractGame {
             e.printStackTrace();
             System.exit(-1);
         }
+        Actor.setArrActors(actors);
+            //the Actor class itself has a static attribute in form of array. Is self-referential basically
     }
 
     public ShadowLife(String worldFile) {

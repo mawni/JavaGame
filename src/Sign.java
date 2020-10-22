@@ -13,16 +13,16 @@ public class Sign extends Actor {
         switch (path) {
             //note the numbering is consistent with the Direction class
             case "up":
-                temp = 0;
+                temp = Direction.UP;
                 break;
             case "down":
-                temp = 1;
+                temp = Direction.DOWN;
                 break;
             case "left":
-                temp = 2;
+                temp = Direction.LEFT;
                 break;
             case "right":
-                temp = 3;
+                temp = Direction.RIGHT;
         }
         this.direction = temp;
     }
