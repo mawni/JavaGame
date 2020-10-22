@@ -62,6 +62,7 @@ public class Gatherer extends Actor {
             getLastFromList().move(clockwise90(this.direction));
             makeActorEmpty(this);
                 //more or less delete current actor by making it null
+            return; //end update(). no further action this tick
         }
 
         if (atActor(Sign.TYPE_U)){
