@@ -21,6 +21,8 @@ project 1 sample solution used as base
 
 public class ShadowLife extends AbstractGame {
     public static final int TILE_SIZE = 64;
+    public static final String FONT_FILE = "res/VeraMono.ttf";
+    public static final int FONT_SIZE = 20;
 
     private long lastTick = 0;  //time of the last tick in milliseconds
     private static long max_ticks;
@@ -87,11 +89,12 @@ public class ShadowLife extends AbstractGame {
                         //"Pad" becomes "pad"
                         break;
                     case HoardStock.TYPE_H: //"Hoard"
-                        actors.add(new Visual(HoardStock.TYPE_H, type.toLowerCase(), x, y));
+                        actors.add(new HoardStock(HoardStock.TYPE_H, type.toLowerCase(), x, y));
                         //"Hoard" becomes "hoard"
                         break;
                     case HoardStock.TYPE_S: //"Stockpile"
-                        actors.add(new Visual(HoardStock.TYPE_S, "cherries", x, y));
+                        actors.add(new HoardStock(HoardStock.TYPE_S, "cherries", x, y));
+                        //System.out.println("stockpile generated @ (x,y) = " + "(" + x + "," + y + ")");
                         //one-off hardcode of file path
                         break;
                 }

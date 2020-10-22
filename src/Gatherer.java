@@ -94,6 +94,7 @@ public class Gatherer extends Actor {
             }
         }
 
+
         Actor hoardRef = atActorGetObject(HoardStock.TYPE_H); //hoard
         if (hoardRef != null && (hoardRef instanceof HoardStock)){
             //if at hoard

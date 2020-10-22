@@ -2,6 +2,8 @@
 project 1 sample solution used as base
 */
 
+import bagel.Font;
+
 public class Tree extends Actor {
     public static final String TYPE = "Tree";
     private int fruit;
@@ -29,5 +31,12 @@ public class Tree extends Actor {
     @Override
     public int getAttribute(){
         return getFruit();
+    }
+
+    @Override
+    public void render(){
+        super.render(); //this uses the default implementation of superclass render to draw the actual tree
+        Font font = new Font(ShadowLife.FONT_FILE, ShadowLife.FONT_SIZE);
+        font.drawString(String.valueOf(fruit), getX(), getY());
     }
 }

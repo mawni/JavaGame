@@ -18,6 +18,15 @@ public abstract class Actor {
     private final Image image;
     public final String type;
 
+    public int getX() {return x;}
+    public void setX(int x) {
+        this.x = x;
+    }
+    public int getY() {return y;}
+    public void setY(int y) {
+        this.y = y;
+    }
+
     public Actor(String filename, String type, int x, int y) {
         image = new Image(filename);
         this.type = type;
@@ -81,10 +90,10 @@ public abstract class Actor {
     //reference returned is the same reference used for actual actor object in question. means that the object itself...
     //...can have it's attributes modified through this reference. BUT the reference is passed-by-value, so if the ...
     //...returned reference is changed, the object's original reference is unaffected
-    public Actor atActorGetObject(String type){
+    public Actor atActorGetObject(String targetType){
         //pass in an actor type to see if #this# actor is on it, and give the reference to found actor (if found)
         for (Actor actor : arrActors){
-            if (actor.type.equals(type)){
+            if (actor.type.equals(targetType)){
                 if (this.x == actor.x && this.y == actor.y){
                     return actor;
                 }
