@@ -30,7 +30,7 @@ public class ShadowLife extends AbstractGame {
     private static long tickCtr = 0;
 
     private static final int MAX_ACTORS = 100;
-    private Actor[] actors;
+    private ArrayList<Actor> actors = new ArrayList<Actor>();
 
     private final Image background = new Image("res/images/background.png");
 
@@ -45,13 +45,8 @@ public class ShadowLife extends AbstractGame {
         //read through world files
         //file path is input argument
 
-        int count = 0; //counter for adding actors to Actor[] array
-
-
         try (BufferedReader reader = new BufferedReader(new FileReader(worldFile))) {
             int size = (int) Files.lines(Path.of(worldFile)).count();
-            actors = new Actor[size];
-                //generate Actor array of size size based on num of lines in file
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -65,38 +60,38 @@ public class ShadowLife extends AbstractGame {
                 switch (type) {
                     case Tree.TYPE:
                         //if type = "Tree"
-                        actors[count++] = new Tree(x, y);
+                        actors.add(new Tree(x, y));
                         break;
                     case Gatherer.TYPE:
                         //if type = "Gatherer"
-                        actors[count++] = new Gatherer(x, y);
+                        actors.add(new Gatherer(x, y));
                         break;
                     case Thief.TYPE:
                         //if type = "Thief"
-                        actors[count++] = new Thief(x, y);
+                        actors.add(new Thief(x, y));
                         break;
                     case Visual.TYPE_F: //"Fence"
-                        actors[count++] = new Visual(Visual.TYPE_F, type.toLowerCase(), x, y);
+                        actors.add(new Visual(Visual.TYPE_F, type.toLowerCase(), x, y));
                         //"Fence" becomes "fence"
                         break;
                     case Visual.TYPE_G: //"GoldTree"
-                        actors[count++] = new Visual(Visual.TYPE_G, "gold-tree", x, y);
+                        actors.add(new Visual(Visual.TYPE_G, "gold-tree", x, y));
                         //one-off hardcode of file path. i think it's appropriate
                         break;
                     case Visual.TYPE_P: //"Pool"
-                        actors[count++] = new Visual(Visual.TYPE_P, type.toLowerCase(), x, y);
+                        actors.add(new Visual(Visual.TYPE_P, type.toLowerCase(), x, y));
                         //"Pool" becomes "pool"
                         break;
                     case Visual.TYPE_D: //"Pad"
-                        actors[count++] = new Visual(Visual.TYPE_D, type.toLowerCase(), x, y);
+                        actors.add(new Visual(Visual.TYPE_D, type.toLowerCase(), x, y));
                         //"Pad" becomes "pad"
                         break;
                     case HoardStock.TYPE_H: //"Hoard"
-                        actors[count++] = new Visual(HoardStock.TYPE_H, type.toLowerCase(), x, y);
+                        actors.add(new Visual(HoardStock.TYPE_H, type.toLowerCase(), x, y));
                         //"Hoard" becomes "hoard"
                         break;
                     case HoardStock.TYPE_S: //"Stockpile"
-                        actors[count++] = new Visual(HoardStock.TYPE_S, "cherries", x, y);
+                        actors.add(new Visual(HoardStock.TYPE_S, "cherries", x, y));
                         //one-off hardcode of file path
                         break;
                 }
@@ -104,7 +99,7 @@ public class ShadowLife extends AbstractGame {
                     //if args[0] contains "Sign"
                     type = type.replace(Sign.TYPE, "").toLowerCase();
                     //this should make "SignLeft" into "left" for example
-                    actors[count++] = new Sign(type, x, y);
+                    actors.add(new Sign(type, x, y));
                 }
             }
         } catch (IOException e) {
@@ -139,6 +134,9 @@ public class ShadowLife extends AbstractGame {
                 }
             }
         }
+
+        //some actors will change the Actor class ArrayList. This next line updates ShadowLife ArrayList
+        actors = Actor.getArrActors();
 
         // Draw all elements
         background.drawFromTopLeft(0, 0);

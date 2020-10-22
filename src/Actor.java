@@ -1,5 +1,7 @@
 import bagel.Image;
 
+import java.util.ArrayList;
+
 /*
 project 1 sample solution used as base
 */
@@ -8,7 +10,10 @@ public abstract class Actor {
     private int x;
     private int y;
     private int prevX, prevY;
-    private static Actor arrActors[];
+    private static ArrayList<Actor> arrActors;
+        //array list in Actor-class is always more up to date than that in ShadowLife class
+        //this is because Actor subclasses will be changing it superclass static arrActors within their update() methods
+        //this superclass array list exists because subclasses themselves need to be aware of other actors in the game
 
     private final Image image;
     public final String type;
@@ -22,8 +27,11 @@ public abstract class Actor {
         this.prevY = y;
     }
 
-    public static void setArrActors(Actor[] actors){
+    public static void setArrActors(ArrayList<Actor> actors){
         arrActors = actors;
+    }
+    public static ArrayList<Actor> getArrActors(){
+        return arrActors;
     }
 
     public final void tick() {
