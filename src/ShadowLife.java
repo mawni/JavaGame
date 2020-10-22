@@ -97,8 +97,6 @@ public class ShadowLife extends AbstractGame {
                 }
                 if (type.contains(Sign.TYPE)){
                     //if args[0] contains "Sign"
-                    type = type.replace(Sign.TYPE, "").toLowerCase();
-                    //this should make "SignLeft" into "left" for example
                     actors.add(new Sign(type, x, y));
                 }
             }

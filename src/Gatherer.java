@@ -57,8 +57,13 @@ public class Gatherer extends Actor {
             prevPosition();
         }
 
+        //LINES 6-10
         if (atActor(Visual.TYPE_P)){
-            //if at pool
+            //if at pool then do a bunch of stuff
+        }
+
+        if (atActor(Sign.TYPE)){
+            //if at a sign
 
         }
 

@@ -8,6 +8,10 @@ public class HoardStock extends Actor {
         fruit = 0;
     }
 
+    public int getFruit(){
+        return fruit;
+    }
+
     @Override
     public void update() {}
     //implemented with zero logic
