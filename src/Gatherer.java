@@ -16,6 +16,13 @@ public class Gatherer extends Actor {
         active = true;
     }
 
+    public Gatherer(int x, int y, int direction) {
+        super("res/images/gatherer.png", TYPE, x, y);
+        this.direction = direction;
+        carrying = false;
+        active = true;
+    }
+
     @Override
     public void update() {
         //update runs each tick.
@@ -46,10 +53,15 @@ public class Gatherer extends Actor {
             prevPosition();
         }
 
-        //LINES 6-10
+
         if (atActor(Visual.TYPE_P)){
             //if at mitosis pool
-            //####################################
+            addActorToEnd(new Gatherer(this.getX(), this.getY(), antiClockwise90(this.direction)));
+            getLastFromList().move(antiClockwise90(this.direction));
+            addActorToEnd(new Gatherer(this.getX(), this.getY(), clockwise90(this.direction)));;
+            getLastFromList().move(clockwise90(this.direction));
+            makeActorEmpty(this);
+                //more or less delete current actor by making it null
         }
 
         if (atActor(Sign.TYPE_U)){
@@ -128,5 +140,42 @@ public class Gatherer extends Actor {
                 direction = Direction.LEFT;
         }
     }
+
+    public int antiClockwise90(int direction){
+        //takes in a direction and rotates it counter clockwise 90 degrees
+        switch (direction){
+            case Direction.UP:
+                direction = Direction.LEFT;
+                break;
+            case Direction.DOWN:
+                direction = Direction.RIGHT;
+                break;
+            case Direction.LEFT:
+                direction = Direction.DOWN;
+                break;
+            case Direction.RIGHT:
+                direction = Direction.UP;
+        }
+        return direction;
+    }
+    public int clockwise90(int direction){
+        //takes in a direction and rotates it clockwise 90 degrees
+        switch (direction){
+            case Direction.UP:
+                direction = Direction.RIGHT;
+                break;
+            case Direction.DOWN:
+                direction = Direction.LEFT;
+                break;
+            case Direction.LEFT:
+                direction = Direction.UP;
+                break;
+            case Direction.RIGHT:
+                direction = Direction.DOWN;
+        }
+        return direction;
+    }
+
+
 
 }

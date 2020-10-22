@@ -132,14 +132,15 @@ public class ShadowLife extends AbstractGame {
         if (System.currentTimeMillis() - lastTick > tick_time) {
             lastTick = System.currentTimeMillis();
             tickCtr++;
-            for (Actor actor : actors) {
-                if (actor != null) {
-                    actor.tick();
+            for (int i = 0; i < actors.size(); i++) {
+                if (actors.get(i) != null) {
+                    actors.get(i).tick();
                         //all updates relevant to each actor are executed within tick()
                 }
             }
         }
 
+        Actor.moveThievesToEnd();
         //some actors will change the Actor class ArrayList. This next line updates ShadowLife ArrayList
         actors = Actor.getArrActors();
 

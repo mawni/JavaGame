@@ -42,6 +42,21 @@ public abstract class Actor {
     public static ArrayList<Actor> getArrActors(){
         return arrActors;
     }
+    /*public static void addActorToFront(Actor actor){
+        //this will be used for adding gatherers primarily so that they're always before thieves
+        arrActors.add(0, actor);
+    }*/
+    public static void addActorToEnd(Actor actor){
+        //this will be used for adding thieves primarily, so that they're always after gatherers
+        arrActors.add(actor);
+    }
+    public static Actor getLastFromList(){
+        return arrActors.get(arrActors.size()-1);
+    }
+    public static void makeActorEmpty(Object actor){
+        //take in what should be an existing item in the array list, find its index, then make that item null
+        arrActors.set(arrActors.indexOf(actor), null);
+    }
 
     public final void tick() {
         update();
@@ -57,6 +72,25 @@ public abstract class Actor {
         prevY = y;
         x += deltaX;
         y += deltaY;
+    }
+
+    public void move(int direction){
+        //move based on a given direction
+        switch (direction) {
+            case Direction.UP:
+                //Direction.UP = a constant. Value = 0
+                move(0, -ShadowLife.TILE_SIZE);
+                break;
+            case Direction.DOWN:
+                move(0, ShadowLife.TILE_SIZE);
+                break;
+            case Direction.LEFT:
+                move(-ShadowLife.TILE_SIZE, 0);
+                break;
+            case Direction.RIGHT:
+                move(ShadowLife.TILE_SIZE, 0);
+                break;
+        }
     }
 
     public void prevPosition(){
@@ -75,9 +109,11 @@ public abstract class Actor {
     public boolean atActor(String type){
         //pass in an actor type to see if this actor is on it
         for (Actor actor : arrActors){
-            if (actor.type.equals(type)){
-                if (this.x == actor.x && this.y == actor.y){
-                    return true;
+            if(actor != null){
+                if (actor.type.equals(type)){
+                    if (this.x == actor.x && this.y == actor.y){
+                        return true;
+                    }
                 }
             }
         }
@@ -93,9 +129,11 @@ public abstract class Actor {
     public Actor atActorGetObject(String targetType){
         //pass in an actor type to see if #this# actor is on it, and give the reference to found actor (if found)
         for (Actor actor : arrActors){
-            if (actor.type.equals(targetType)){
-                if (this.x == actor.x && this.y == actor.y){
-                    return actor;
+            if (actor != null){
+                if (actor.type.equals(targetType)){
+                    if (this.x == actor.x && this.y == actor.y){
+                        return actor;
+                    }
                 }
             }
         }
@@ -111,5 +149,21 @@ public abstract class Actor {
         return -1;
         //note this superclass method could be used by overridden subclass method with super.getAttribute()
         //but in this case, that would be useless
+    }
+
+    public static void moveThievesToEnd(){
+        //exactly as described, moves all thieves to end
+        //this is needed because mitosis pool leads to new gatherers put after pre-existing thieves
+        ArrayList<Actor> tempThief = new ArrayList<Actor>();
+        for (int i = 0; i<arrActors.size(); i++){
+            if (arrActors.get(i) == null){
+                arrActors.remove(i);
+            } else if (arrActors.get(i).type.contains(Thief.TYPE)){
+                //if it's a thief
+                tempThief.add(arrActors.get(i));
+                arrActors.remove(i);
+            }
+        }
+        arrActors.addAll(tempThief);
     }
 }
