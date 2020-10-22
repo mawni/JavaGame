@@ -3,8 +3,6 @@
 project 1 sample solution used as base
 */
 
-import java.util.ArrayList;
-
 public class Gatherer extends Actor {
     public static final String TYPE = "Gatherer";
     private int direction;
@@ -96,12 +94,32 @@ public class Gatherer extends Actor {
             }
         }
 
-        //add hoard & stockpile functionality
+        Actor hoardRef = atActorGetObject(HoardStock.TYPE_H); //hoard
+        if (hoardRef != null && (hoardRef instanceof HoardStock)){
+            //if at hoard
+            hoardStockLogic(hoardRef);
+        }
+        Actor stockRef = atActorGetObject(HoardStock.TYPE_S); //stockpile
+        if (stockRef != null && (stockRef instanceof HoardStock)){
+            //if at stockpile
+            hoardStockLogic(stockRef);
+        }
 
     }
 
     public void tookFromTree(){
         carrying = true;
+        flip180();
+    }
+    public void hoardStockLogic(Actor hoardStock){
+        if (carrying){
+            carrying = false;
+            hoardStock.setAttribute(hoardStock.getAttribute()+1);
+            //increase fruit by 1
+        }
+        flip180();
+    }
+    public void flip180(){
         switch (direction){
             //rotate direction 180deg
             case Direction.UP:
