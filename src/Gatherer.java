@@ -62,10 +62,59 @@ public class Gatherer extends Actor {
             //if at pool then do a bunch of stuff
         }
 
-        if (atActor(Sign.TYPE)){
-            //if at a sign
+        if (atActor(Sign.TYPE_U)){
+            //if at a SignUp
+            direction = Direction.UP;
+        } else if (atActor(Sign.TYPE_D)){
+            //if at SignDown
+            direction = Direction.DOWN;
+        } else if (atActor(Sign.TYPE_L)){
+            //if at SignLeft
+            direction = Direction.LEFT;
+        } else if (atActor(Sign.TYPE_R)){
+            direction = Direction.RIGHT;
+        } //used a series of if and else if so that if one completes, it doesn't check for remaining signs
 
+
+        if (carrying == false){
+            Actor treeReference = atActorGetObject(Tree.TYPE);
+            if (treeReference != null && (treeReference instanceof Tree)) {
+                //if at tree (& double checking object is actually tree)
+                //((Tree) treeReference).getFruit(); //can be done with casting or superclass override. I chose override
+                if (treeReference.getAttribute()>=1){
+                    //if at least 1 fruit
+                    treeReference.setAttribute(treeReference.getAttribute()-1);
+                    //decrease fruit by 1
+                    tookFromTree();
+                }
+            }
+            treeReference = atActorGetObject(Visual.TYPE_G); //checking for golden tree
+            if (treeReference != null && (treeReference instanceof Visual)){
+                //if at golden tree (& double checking object is of correct class)
+                //gold tree has infinite fruit, no number changing needed
+                tookFromTree();
+            }
         }
 
+        //add hoard & stockpile functionality
+
+    }
+
+    public void tookFromTree(){
+        carrying = true;
+        switch (direction){
+            //rotate direction 180deg
+            case Direction.UP:
+                direction = Direction.DOWN;
+                break;
+            case Direction.DOWN:
+                direction = Direction.UP;
+                break;
+            case Direction.LEFT:
+                direction = Direction.RIGHT;
+                break;
+            case Direction.RIGHT:
+                direction = Direction.LEFT;
+        }
     }
 }
