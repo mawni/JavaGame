@@ -3,12 +3,23 @@
 project 1 sample solution used as base
 */
 
+/**
+ * Used for Gatherer actors. All relevant logic fully within this class
+ */
 public class Gatherer extends Actor {
+    /**
+     * String that corresponds to the Actor.type used for all instances of this class.
+     */
     public static final String TYPE = "Gatherer";
     private int direction;
     private boolean carrying;
     private boolean active;
 
+    /**
+     * Constructor for the Gatherer. Used when creating/initialising gatherers from a world file.
+     * @param x X coordinate where the gatherer is initially placed.
+     * @param y Y coordinate where the gatherer is initially placed.
+     */
     public Gatherer(int x, int y) {
         super("res/images/gatherer.png", TYPE, x, y);
         direction = Direction.LEFT;
@@ -16,13 +27,22 @@ public class Gatherer extends Actor {
         active = true;
     }
 
-    public Gatherer(int x, int y, int direction) {
+    /**
+     * Constructor for the Gatherer. Used to create a new gatherer when an existing one steps on a mitosis pool.
+     * @param x X coordinate where the gatherer is initially placed.
+     * @param y Y coordinate where the gatherer is initially placed.
+     * @param direction The direction the gatherer will initially take.
+     */
+    private Gatherer(int x, int y, int direction) {
         super("res/images/gatherer.png", TYPE, x, y);
         this.direction = direction;
         carrying = false;
         active = true;
     }
 
+    /**
+     * Used to update a gatherer's state. In other words, the actions a gatherer takes within a tick.
+     */
     @Override
     public void update() {
         //update runs each tick.
@@ -56,10 +76,10 @@ public class Gatherer extends Actor {
 
         if (atActor(Visual.TYPE_P)){
             //if at mitosis pool
-            addActorToEnd(new Gatherer(this.getX(), this.getY(), antiClockwise90(this.direction)));
-            getLastFromList().move(antiClockwise90(this.direction));
-            addActorToEnd(new Gatherer(this.getX(), this.getY(), clockwise90(this.direction)));;
-            getLastFromList().move(clockwise90(this.direction));
+            addActorToEnd(new Gatherer(this.getX(), this.getY(), Direction.antiClockwise90(this.direction)));
+            getLastFromList().move(Direction.antiClockwise90(this.direction));
+            addActorToEnd(new Gatherer(this.getX(), this.getY(), Direction.clockwise90(this.direction)));;
+            getLastFromList().move(Direction.clockwise90(this.direction));
             makeActorEmpty(this);
                 //more or less delete current actor by making it null
             return; //end update(). no further action this tick
@@ -113,11 +133,22 @@ public class Gatherer extends Actor {
 
     }
 
-    public void tookFromTree(){
+    //Note many methods within each Actor subclass are made private. This is because the actions that actor subclasses
+    //take upon a tick are fully encapsulated within that subclass itself. That is a public user should have no need for
+    //any of them.
+    /**
+     * Used to update the state of a gatherer when it takes fruit from a tree.
+     */
+    private void tookFromTree(){
         carrying = true;
         flip180();
     }
-    public void hoardStockLogic(Actor hoardStock){
+
+    /**
+     * Used to update the state of a gatherer when it steps on a hoard or stockpile.
+     * @param hoardStock Reference that points to a HoardStock object.
+     */
+    private void hoardStockLogic(Actor hoardStock){
         if (carrying){
             carrying = false;
             hoardStock.setAttribute(hoardStock.getAttribute()+1);
@@ -125,7 +156,11 @@ public class Gatherer extends Actor {
         }
         flip180();
     }
-    public void flip180(){
+
+    /**
+     * Used to flip the direction of a gatherer by 180 degrees.
+     */
+    private void flip180(){
         switch (direction){
             //rotate direction 180deg
             case Direction.UP:
@@ -141,42 +176,5 @@ public class Gatherer extends Actor {
                 direction = Direction.LEFT;
         }
     }
-
-    public int antiClockwise90(int direction){
-        //takes in a direction and rotates it counter clockwise 90 degrees
-        switch (direction){
-            case Direction.UP:
-                direction = Direction.LEFT;
-                break;
-            case Direction.DOWN:
-                direction = Direction.RIGHT;
-                break;
-            case Direction.LEFT:
-                direction = Direction.DOWN;
-                break;
-            case Direction.RIGHT:
-                direction = Direction.UP;
-        }
-        return direction;
-    }
-    public int clockwise90(int direction){
-        //takes in a direction and rotates it clockwise 90 degrees
-        switch (direction){
-            case Direction.UP:
-                direction = Direction.RIGHT;
-                break;
-            case Direction.DOWN:
-                direction = Direction.LEFT;
-                break;
-            case Direction.LEFT:
-                direction = Direction.UP;
-                break;
-            case Direction.RIGHT:
-                direction = Direction.DOWN;
-        }
-        return direction;
-    }
-
-
 
 }

@@ -1,10 +1,21 @@
+/**
+ * Used for Thief actors. All relevant logic fully within this class
+ */
 public class Thief extends Actor {
+    /**
+     * String that corresponds to the Actor.type used for all instances of this class.
+     */
     public static final String TYPE = "Thief";
     private int direction;
     private boolean carrying;
     private boolean active;
     private boolean consuming;
 
+    /**
+     * Constructor for the Thief. Used when creating/initialising thieves from a world file.
+     * @param x X coordinate where the thief is initially placed.
+     * @param y Y coordinate where the thief is initially placed.
+     */
     public Thief(int x, int y) {
         super("res/images/thief.png", TYPE, x, y);
         direction = Direction.UP;
@@ -12,6 +23,13 @@ public class Thief extends Actor {
         consuming = false;
         active = true;
     }
+
+    /**
+     * Constructor for the Thief. Used to create a new thief when an existing one steps on a mitosis pool.
+     * @param x X coordinate where the thief is initially placed.
+     * @param y Y coordinate where the thief is initially placed.
+     * @param direction The direction the thief will initially take.
+     */
     public Thief(int x, int y, int direction) {
         super("res/images/thief.png", TYPE, x, y);
         this.direction = direction;
@@ -20,6 +38,9 @@ public class Thief extends Actor {
         active = true;
     }
 
+    /**
+     * Used to update a thief's state. In other words, the actions a thief takes within a tick.
+     */
     @Override
     public void update() {
         //update runs each tick.
@@ -51,10 +72,10 @@ public class Thief extends Actor {
 
         if (atActor(Visual.TYPE_P)){
             //if at mitosis pool
-            addActorToEnd(new Thief(this.getX(), this.getY(), antiClockwise90(this.direction)));
-            getLastFromList().move(antiClockwise90(this.direction));
-            addActorToEnd(new Thief(this.getX(), this.getY(), clockwise90(this.direction)));;
-            getLastFromList().move(clockwise90(this.direction));
+            addActorToEnd(new Thief(this.getX(), this.getY(), Direction.antiClockwise90(this.direction)));
+            getLastFromList().move(Direction.antiClockwise90(this.direction));
+            addActorToEnd(new Thief(this.getX(), this.getY(), Direction.clockwise90(this.direction)));;
+            getLastFromList().move(Direction.clockwise90(this.direction));
             makeActorEmpty(this);
             //more or less delete current actor by making it null
             return; //end update(). no further action this tick
@@ -155,44 +176,12 @@ public class Thief extends Actor {
 
     }
 
-    public int antiClockwise90(int direction){
-        //takes in a direction and rotates it counter clockwise 90 degrees
-        switch (direction){
-            case Direction.UP:
-                direction = Direction.LEFT;
-                break;
-            case Direction.DOWN:
-                direction = Direction.RIGHT;
-                break;
-            case Direction.LEFT:
-                direction = Direction.DOWN;
-                break;
-            case Direction.RIGHT:
-                direction = Direction.UP;
-        }
-        return direction;
-    }
-
-    public void clockwise90(){
-        direction = clockwise90(direction);
+    /**
+     * Used to rotate a thief's current direction by 90 degrees clockwise.
+     */
+    private void clockwise90(){
+        direction = Direction.clockwise90(direction);
         //this method just applies the change automatically
-    }
-    public int clockwise90(int direction){
-        //takes in a direction and rotates it clockwise 90 degrees
-        switch (direction){
-            case Direction.UP:
-                direction = Direction.RIGHT;
-                break;
-            case Direction.DOWN:
-                direction = Direction.LEFT;
-                break;
-            case Direction.LEFT:
-                direction = Direction.UP;
-                break;
-            case Direction.RIGHT:
-                direction = Direction.DOWN;
-        }
-        return direction;
     }
 
 }

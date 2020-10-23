@@ -33,7 +33,7 @@ public abstract class Actor {
      * Used to change the value of the x attribute.
      * @param x The value to change the object's x to.
      */
-    public void setX(int x) {
+    protected void setX(int x) {
         this.x = x;
     }
 
@@ -47,7 +47,7 @@ public abstract class Actor {
      * Used to change the value of the y attribute.
      * @param y The value to change the object's y to.
      */
-    public void setY(int y) {
+    protected void setY(int y) {
         this.y = y;
     }
 
@@ -90,7 +90,7 @@ public abstract class Actor {
      * Used to add an actor to the end of the static actor list in Actor-class.
      * @param actor The actor to be added to the list.
      */
-    public static void addActorToEnd(Actor actor){
+    protected static void addActorToEnd(Actor actor){
         arrActors.add(actor);
     }
 
@@ -98,7 +98,7 @@ public abstract class Actor {
      * Gets the last actor from Actor-class array list arrActors.
      * @return The last actor object in list.
      */
-    public static Actor getLastFromList(){
+    protected static Actor getLastFromList(){
         return arrActors.get(arrActors.size()-1);
     }
 
@@ -106,7 +106,7 @@ public abstract class Actor {
      * Makes an array list item equal to null. Used when an actor is removed from simulation.
      * @param actor The index of the array list actor object to make null.
      */
-    public static void makeActorEmpty(Object actor){
+    protected static void makeActorEmpty(Object actor){
         //take in what should be an existing item in the array list, find its index, then make that item null
         arrActors.set(arrActors.indexOf(actor), null);
     }
@@ -132,7 +132,7 @@ public abstract class Actor {
      * @param deltaX Value to add to the existing x coordinate. Works as so: x=x+deltaX.
      * @param deltaY Value to add to the existing y coordinate. Works as so: y=y+deltaY.
      */
-    public void move(int deltaX, int deltaY) {
+    protected void move(int deltaX, int deltaY) {
         prevX = x;
         prevY = y;
         x += deltaX;
@@ -143,7 +143,7 @@ public abstract class Actor {
      * Moves an actor according to only a direction. Moves actor 1 tile in that direction.
      * @param direction Direction to move 1 tile. Up=0,Down=1,Left=2,Right=3.
      */
-    public void move(int direction){
+    protected void move(int direction){
         //move based on a given direction
         switch (direction) {
             case Direction.UP:
@@ -165,7 +165,7 @@ public abstract class Actor {
     /**
      * Moves an actor to its previous position, i.e. wherever it was last tick.
      */
-    public void prevPosition(){
+    protected void prevPosition(){
         //moves an actor to its previous coords (hence making the current coords the new prevX,Y)
         int tempX = x;
         int tempY = y;
@@ -181,7 +181,7 @@ public abstract class Actor {
     public abstract void update();
     //abstract, so all subclasses must implement update(), even if empty logic
 
-    public boolean atActor(String type){
+    protected boolean atActor(String type){
         //pass in an actor type to see if this actor is on it
         for (Actor actor : arrActors){
             if(actor != null){
@@ -207,7 +207,7 @@ public abstract class Actor {
      * @param targetType The type of the actor to look for, e.g. "Gatherer".
      * @return The reference of the actor object found at same x,y position. = null if actor not found.
      */
-    public Actor atActorGetObject(String targetType){
+    protected Actor atActorGetObject(String targetType){
         //pass in an actor type to see if #this# actor is on it, and give the reference to found actor (if found)
         for (Actor actor : arrActors){
             if (actor != null){
@@ -227,7 +227,7 @@ public abstract class Actor {
      * Subclasses will override/implement only if they even have such an attribute. Superclass base implementation is useless.
      * @param val The number to change an int attribute to.
      */
-    public void setAttribute(int val){
+    protected void setAttribute(int val){
         //empty but will be overridden in relevant subclasses to modify an attribute e.g. Tree class to modify fruit int
     }
 
@@ -236,7 +236,7 @@ public abstract class Actor {
      * Subclasses will override/implement only if they even have such an attribute. Superclass base implementation is useless.
      * @return The value of the single defining attribute. Superclass base implementation returns -1.
      */
-    public int getAttribute(){
+    protected int getAttribute(){
         //empty but will be overridden in relevant subclasses to get an int attribute e.g. Tree class to get fruit int
         return -1;
         //note this superclass method could be used by overridden subclass method with super.getAttribute()
