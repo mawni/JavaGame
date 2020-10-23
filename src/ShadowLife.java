@@ -214,6 +214,7 @@ public class ShadowLife extends AbstractGame {
                     System.out.println(actor.getAttribute());
                 }
             }
+            System.exit(0);
         }
     }
 
