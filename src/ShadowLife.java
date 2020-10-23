@@ -204,6 +204,17 @@ public class ShadowLife extends AbstractGame {
                 actor.render();
             }
         }
+
+        //check if all gatherers and thieves now inactive
+        if (Actor.anyActivePlayers()==false){
+            //at this point, Actor.arrActors and Shadow.actors are both exactly the same
+            System.out.println(tickCtr + " ticks");
+            for (Actor actor : actors) {
+                if (actor != null && (actor instanceof HoardStock)) {
+                    System.out.println(actor.getAttribute());
+                }
+            }
+        }
     }
 
     /**

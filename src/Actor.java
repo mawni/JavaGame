@@ -261,4 +261,25 @@ public abstract class Actor {
         }
         arrActors.addAll(tempThief);
     }
+
+    /**
+     * Used to determine if there are any active Gatherers or Thieves.
+     * @return True or False. True = at least one active Gatherer or Thief. False = all Gatherers and Thieves inactive.
+     */
+    public static boolean anyActivePlayers(){
+        boolean anyActive = false;
+        for (Actor actor : arrActors) {
+            if (actor != null && (actor instanceof Gatherer)) {
+                if (((Gatherer) actor).getActive()==true){
+                    anyActive = true;
+                }
+            }
+            if (actor != null && (actor instanceof Thief)) {
+                if (((Thief) actor).getActive()==true){
+                    anyActive = true;
+                }
+            }
+        }
+        return anyActive;
+    }
 }

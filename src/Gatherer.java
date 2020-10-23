@@ -41,6 +41,14 @@ public class Gatherer extends Actor {
     }
 
     /**
+     * Used to get the active status of Gatherer.
+     * @return Value of Gatherer.active.
+     */
+    protected boolean getActive() {
+        return this.active;
+    }
+
+    /**
      * Used to update a gatherer's state. In other words, the actions a gatherer takes within a tick.
      */
     @Override

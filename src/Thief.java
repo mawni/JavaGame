@@ -39,6 +39,14 @@ public class Thief extends Actor {
     }
 
     /**
+     * Used to get the active status of Thief.
+     * @return Value of Thief.active.
+     */
+    protected boolean getActive() {
+        return this.active;
+    }
+
+    /**
      * Used to update a thief's state. In other words, the actions a thief takes within a tick.
      */
     @Override
