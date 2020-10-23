@@ -19,9 +19,24 @@ project 1 sample solution used as base
 * - i think sign is finished implementing. should test it with the file
 * */
 
+/**
+ * This class is for simulation to continuously run, with its methods allowing for sim updates multiple times a second.
+ */
 public class ShadowLife extends AbstractGame {
+
+    /**
+     * Side length of square tiles in the gaming simulation. tile dimensions are 64x64.
+     */
     public static final int TILE_SIZE = 64;
+
+    /**
+     * File directory of the font file.
+     */
     public static final String FONT_FILE = "res/VeraMono.ttf";
+
+    /**
+     * Size of font rendered throughout this game.
+     */
     public static final int FONT_SIZE = 20;
 
     private long lastTick = 0;  //time of the last tick in milliseconds
@@ -30,15 +45,23 @@ public class ShadowLife extends AbstractGame {
         //tick rate AKA time in milliseconds between each tick.
         //is static rather than final. Can't have both because it's initialised with cmd args[] and hence in main()
     private static long tickCtr = 0;
-
-    private static final int MAX_ACTORS = 100;
+    //private static final int MAX_ACTORS = 100;
     private ArrayList<Actor> actors = new ArrayList<Actor>();
 
     private final Image background = new Image("res/images/background.png");
 
+    /**
+     * Used for setting the tick_time attribute i.e. time between ticks.
+     * @param time The value that tick_time will be set to.
+     */
     public void setTick_time(long time){
         tick_time = time;
     }
+
+    /**
+     * Used to set the maximum number of ticks.
+     * @param ticks The value that max_ticks will be set to.
+     */
     public void setMax_ticks(long ticks){
         max_ticks = ticks;
     }
@@ -139,6 +162,10 @@ public class ShadowLife extends AbstractGame {
             //the Actor class itself has a static attribute in form of array. Is self-referential basically
     }
 
+    /**
+     * Constructor for the class. used to load actors upon instancing ShadowLife.
+     * @param worldFile The file path of the world file to load actors from.
+     */
     public ShadowLife(String worldFile) {
         //loadActors() is called in the constructor of ShadowLife
         loadActors(worldFile);
@@ -157,6 +184,8 @@ public class ShadowLife extends AbstractGame {
             lastTick = System.currentTimeMillis();
             tickCtr++;
             for (int i = 0; i < actors.size(); i++) {
+                //for loop goes by index because some actors will make new actors within their ticks,
+                //so those new actors will not have their own full ticks until the next tick
                 if (actors.get(i) != null) {
                     actors.get(i).tick();
                         //all updates relevant to each actor are executed within tick()
@@ -177,12 +206,19 @@ public class ShadowLife extends AbstractGame {
         }
     }
 
+    /**
+     * Used to terminate simulation, primarily when command line arguments are invalid.
+     */
     public static void abandonShip(){
         System.out.println("usage: ShadowLife <tick rate> <max ticks> <world file>");
         System.exit(-1);
     }
 
     //main method is entry pt. ShadowLife object made then run. Is by nature continually updated with update()
+    /**
+     * Entry point to program.
+     * @param args Array of command line arguments.
+     */
     public static void main(String[] args) {
         if (args.length != 3){
             //if more or fewer than 3 arguments provided
