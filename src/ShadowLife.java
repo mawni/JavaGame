@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+// THANKS FOR READING! Really enjoyed this project :)
+
 /*
 project 1 sample solution used as base
 */
