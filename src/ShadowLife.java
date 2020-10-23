@@ -18,7 +18,7 @@ project 1 sample solution used as base
 
 /*
 * TO DO
-* - i think sign is finished implementing. should test it with the file
+* ~ fin ~
 * */
 
 /**
@@ -173,6 +173,10 @@ public class ShadowLife extends AbstractGame {
         loadActors(worldFile);
     }
 
+    /**
+     * Used to update the overall simulation of the game. This will run many times a second.
+     * @param input Used if there is input to be inputted.
+     */
     @Override
     protected void update(Input input) {
         if (tickCtr>max_ticks){
